@@ -15,8 +15,8 @@
     <button class="menu-toggle" aria-label="Abrir navegação" aria-expanded="false" onclick="document.querySelector('.nav-links').classList.toggle('open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') !== 'true')">☰</button>
     <nav class="nav-links" aria-label="Navegação principal">
       <a href="#inicio">Início</a><a href="#servicos">Serviços</a><a href="#marcas">Marcas</a><a href="#contacto">Contacto</a>
-      <a class="nav-account" href="#" onclick="openAuth('login'); return false">Entrar</a>
-      <a class="nav-cta" href="#" onclick="openAuth('signup'); return false">Criar conta <span>↗</span></a>
+      <a class="nav-account" id="account-link" href="#" onclick="openAuth('login'); return false">Entrar</a>
+      <a class="nav-cta" id="signup-link" href="#" onclick="openAuth('signup'); return false">Criar conta <span>↗</span></a>
     </nav>
   </header>
 
@@ -74,6 +74,15 @@
     </form>
     <p class="auth-switch" id="auth-switch">Já tens conta? <button type="button" onclick="openAuth('login')">Entrar</button></p>
   </dialog>
+  <dialog class="auth-dialog account-dialog" id="account-dialog" aria-labelledby="account-title">
+    <button class="auth-close" type="button" aria-label="Fechar" onclick="document.getElementById('account-dialog').close()">×</button>
+    <span class="eyebrow green">CONTA GSM SERVER</span>
+    <h2 id="account-title">A minha conta</h2>
+    <p class="auth-intro">Sessão iniciada com:</p>
+    <p class="account-email" id="account-email"></p>
+    <p class="auth-message" id="account-message" role="status" aria-live="polite"></p>
+    <button class="button button-dark auth-submit" type="button" onclick="signOut()">Terminar sessão</button>
+  </dialog>
   <footer class="footer"><a class="brand footer-brand" href="#inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>GSM <b>SERVER</b></span></a><p>Serviços e suporte GSM para profissionais.</p><span>© <span id="year"></span> GSM Server. Todos os direitos reservados.</span></footer>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -81,6 +90,35 @@
   <script>
     const authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
     let authMode = 'signup';
+    function updateAccountUI(user) {
+      const accountLink = document.getElementById('account-link');
+      const signupLink = document.getElementById('signup-link');
+      if (user) {
+        const name = user.user_metadata?.full_name || user.email || 'Conta';
+        accountLink.textContent = name;
+        accountLink.onclick = () => { openAccount(user); return false; };
+        signupLink.hidden = true;
+      } else {
+        accountLink.textContent = 'Entrar';
+        accountLink.onclick = () => { openAuth('login'); return false; };
+        signupLink.hidden = false;
+      }
+    }
+    function openAccount(user) {
+      document.getElementById('account-email').textContent = user.email || '';
+      document.getElementById('account-message').textContent = '';
+      document.getElementById('account-dialog').showModal();
+    }
+    async function signOut() {
+      const { error } = await authClient.auth.signOut();
+      if (error) {
+        document.getElementById('account-message').textContent = error.message;
+        return;
+      }
+      document.getElementById('account-dialog').close();
+    }
+    authClient.auth.getSession().then(({ data }) => updateAccountUI(data.session?.user || null));
+    authClient.auth.onAuthStateChange((_event, session) => updateAccountUI(session?.user || null));
     function openAuth(mode) {
       authMode = mode;
       const login = mode === 'login';
@@ -115,7 +153,9 @@
         } else {
           const { data, error } = await authClient.auth.signInWithPassword({ email, password });
           if (error) throw error;
-          message.textContent = `Sessão iniciada. Bem-vindo/a, ${data.user.user_metadata.full_name || data.user.email}!`;
+          updateAccountUI(data.user);
+          document.getElementById('auth-dialog').close();
+          openAccount(data.user);
         }
       } catch (error) {
         message.textContent = error.message || 'Não foi possível concluir. Tenta novamente.';
