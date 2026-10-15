@@ -15,7 +15,8 @@
     <button class="menu-toggle" aria-label="Abrir navegação" aria-expanded="false" onclick="document.querySelector('.nav-links').classList.toggle('open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') !== 'true')">☰</button>
     <nav class="nav-links" aria-label="Navegação principal">
       <a href="#inicio">Início</a><a href="#servicos">Serviços</a><a href="#marcas">Marcas</a><a href="#contacto">Contacto</a>
-      <a class="nav-cta" href="#servicos">Ver serviços <span>↗</span></a>
+      <a class="nav-account" href="#" onclick="openAuth('login'); return false">Entrar</a>
+      <a class="nav-cta" href="#" onclick="openAuth('signup'); return false">Criar conta <span>↗</span></a>
     </nav>
   </header>
 
@@ -57,9 +58,71 @@
 
     <section id="como-funciona" class="how section-shell"><div class="how-copy"><span class="eyebrow">SIMPLES E TRANSPARENTE</span><h2>O apoio certo,<br><em>em cada etapa.</em></h2><p>Mostra aos teus clientes o processo antes de receberes um pedido. Mais clareza ajuda a criar confiança.</p><a class="button button-dark" href="#contacto">Fala connosco <span>→</span></a></div><div class="steps"><div class="step"><span>01</span><div><h3>Escolhe a marca</h3><p>Indica o fabricante e o modelo do dispositivo.</p></div></div><div class="step"><span>02</span><div><h3>Consulta o serviço</h3><p>Confirma requisitos, disponibilidade e condições.</p></div></div><div class="step"><span>03</span><div><h3>Contacta o suporte</h3><p>Envia os detalhes para receber orientação.</p></div></div></div></section>
 
-    <section id="contacto" class="contact section-shell"><div><span class="eyebrow">PRECISAS DE AJUDA?</span><h2>Vamos conversar<br><em>sobre o teu próximo serviço.</em></h2></div><a class="button button-orange" href="deepmulla1@gmail.com?subject=Pedido%20de%20informação">Enviar email <span>↗</span></a></section>
+    <section id="contacto" class="contact section-shell"><div><span class="eyebrow">PRECISAS DE AJUDA?</span><h2>Vamos conversar<br><em>sobre o teu próximo serviço.</em></h2></div><a class="button button-orange" href="mailto:deepmulla1@gmail.com?subject=Pedido%20de%20informação">Enviar email <span>↗</span></a></section>
   </main>
+  <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+    <button class="auth-close" type="button" aria-label="Fechar" onclick="document.getElementById('auth-dialog').close()">×</button>
+    <span class="eyebrow green">CONTA GSM SERVER</span>
+    <h2 id="auth-title">Criar conta</h2>
+    <p class="auth-intro" id="auth-intro">Cria a tua conta para acompanhar os teus pedidos.</p>
+    <form id="auth-form">
+      <label id="name-field">Nome<input id="full-name" name="name" autocomplete="name" placeholder="O teu nome" required></label>
+      <label>Email<input id="auth-email" type="email" autocomplete="email" placeholder="nome@email.com" required></label>
+      <label>Palavra-passe<input id="auth-password" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo de 8 caracteres" required></label>
+      <button class="button button-orange auth-submit" id="auth-submit" type="submit">Criar conta <span>→</span></button>
+      <p class="auth-message" id="auth-message" role="status" aria-live="polite"></p>
+    </form>
+    <p class="auth-switch" id="auth-switch">Já tens conta? <button type="button" onclick="openAuth('login')">Entrar</button></p>
+  </dialog>
   <footer class="footer"><a class="brand footer-brand" href="#inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>GSM <b>SERVER</b></span></a><p>Serviços e suporte GSM para profissionais.</p><span>© <span id="year"></span> GSM Server. Todos os direitos reservados.</span></footer>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    const authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    let authMode = 'signup';
+    function openAuth(mode) {
+      authMode = mode;
+      const login = mode === 'login';
+      document.getElementById('auth-title').textContent = login ? 'Entrar na conta' : 'Criar conta';
+      document.getElementById('auth-intro').textContent = login ? 'Acede à tua conta GSM Server.' : 'Cria a tua conta para acompanhar os teus pedidos.';
+      document.getElementById('auth-submit').innerHTML = login ? 'Entrar <span>→</span>' : 'Criar conta <span>→</span>';
+      document.getElementById('name-field').hidden = login;
+      document.getElementById('full-name').required = !login;
+      document.getElementById('auth-password').autocomplete = login ? 'current-password' : 'new-password';
+      document.getElementById('auth-switch').innerHTML = login ? 'Ainda não tens conta? <button type="button" onclick="openAuth(\'signup\')">Criar conta</button>' : 'Já tens conta? <button type="button" onclick="openAuth(\'login\')">Entrar</button>';
+      document.getElementById('auth-message').textContent = '';
+      document.getElementById('auth-dialog').showModal();
+    }
+    document.getElementById('auth-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('auth-message');
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      const button = document.getElementById('auth-submit');
+      button.disabled = true;
+      message.textContent = 'A processar…';
+      try {
+        if (authMode === 'signup') {
+          const fullName = document.getElementById('full-name').value.trim();
+          const { error } = await authClient.auth.signUp({
+            email,
+            password,
+            options: { data: { full_name: fullName }, emailRedirectTo: window.location.href.split('#')[0] }
+          });
+          if (error) throw error;
+          message.textContent = 'Conta criada. Verifica o teu email para confirmar o cadastro.';
+        } else {
+          const { data, error } = await authClient.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          message.textContent = `Sessão iniciada. Bem-vindo/a, ${data.user.user_metadata.full_name || data.user.email}!`;
+        }
+      } catch (error) {
+        message.textContent = error.message || 'Não foi possível concluir. Tenta novamente.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
