@@ -3,39 +3,63 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Um website simples, rápido e gratuito para apresentar o teu projeto.">
-  <title>O meu website</title>
+  <meta name="description" content="Serviços GSM para profissionais: consulta serviços de desbloqueio e suporte para dispositivos móveis.">
+  <meta name="theme-color" content="#35a95a">
+  <title>GSM Server | Serviços para profissionais</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topo">
-    <a class="marca" href="#inicio">O meu projeto</a>
-    <nav aria-label="Navegação principal">
-      <a href="#sobre">Sobre</a>
-      <a href="#contacto">Contacto</a>
+  <div class="notice">Apoio a profissionais GSM · Resposta rápida e informação clara</div>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="GSM Server, início"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>GSM <b>SERVER</b></span></a>
+    <button class="menu-toggle" aria-label="Abrir navegação" aria-expanded="false" onclick="document.querySelector('.nav-links').classList.toggle('open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') !== 'true')">☰</button>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#inicio">Início</a><a href="#servicos">Serviços</a><a href="#marcas">Marcas</a><a href="#contacto">Contacto</a>
+      <a class="nav-cta" href="#servicos">Ver serviços <span>↗</span></a>
     </nav>
   </header>
 
   <main id="inicio">
-    <section class="destaque">
-      <p class="etiqueta">Bem-vindo/a</p>
-      <h1>Uma ideia simples pode ganhar vida online.</h1>
-      <p>Este é o teu espaço na internet. Conta aqui, em poucas palavras, o que fazes e para quem.</p>
-      <a class="botao" href="#sobre">Conhecer o projeto</a>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse"></span> SOLUÇÕES GSM PARA PROFISSIONAIS</span>
+        <h1 id="hero-title">O teu parceiro<br>em <em>serviços móveis.</em></h1>
+        <p>Consulta serviços para várias marcas, acompanha as novidades e encontra apoio para o teu negócio GSM.</p>
+        <div class="hero-actions"><a class="button button-orange" href="#servicos">Explorar serviços <span>→</span></a><a class="text-link" href="#como-funciona">Como funciona <span>↓</span></a></div>
+        <div class="hero-proof"><span class="proof-icon">✓</span><span><strong>Feito para técnicos e revendedores</strong><small>Informação clara para escolher o serviço certo</small></span></div>
+      </div>
+      <div class="hero-art" aria-label="Ilustração de telemóveis">
+        <div class="orb orb-one"></div><div class="orb orb-two"></div>
+        <div class="phone phone-back"><div class="screen screen-back"><span class="camera"></span><div class="wallpaper-lines"></div></div></div>
+        <div class="phone phone-front"><div class="screen"><span class="camera"></span><div class="screen-badge"><span class="mini-mark">▣</span> GSM<br><b>SERVER</b></div><div class="screen-caption">MOBILE SERVICES<br><strong>MADE SIMPLE</strong></div></div></div>
+        <div class="float-card"><span class="float-check">✓</span><span><b>Suporte GSM</b><small>Para o teu negócio</small></span></div>
+        <div class="hero-caption">SERVIÇOS MÓVEIS · SUPORTE · SOLUÇÕES GSM</div>
+      </div>
+      <div class="slide-dots" aria-hidden="true"><i class="active"></i><i></i><i></i></div>
     </section>
 
-    <section id="sobre" class="cartao">
-      <h2>Sobre</h2>
-      <p>Substitui este texto por uma apresentação tua, do teu negócio ou do teu projeto. Podes acrescentar imagens e outras páginas quando quiseres.</p>
+    <section class="search-wrap" aria-label="Pesquisar serviços">
+      <form class="search-box" onsubmit="event.preventDefault(); document.querySelector('#servicos').scrollIntoView({behavior:'smooth'});">
+        <span class="search-icon" aria-hidden="true">⌕</span><label class="sr-only" for="service-search">Pesquisar serviços ou marcas</label><input id="service-search" type="search" placeholder="Pesquisar serviços ou marcas…"><select aria-label="Categoria"><option>Todas as categorias</option><option>Desbloqueio</option><option>Software</option><option>Suporte técnico</option></select><button type="submit">Pesquisar</button>
+      </form>
+      <p>Pesquisa demonstrativa. Os serviços disponíveis devem ser adicionados pelo proprietário do site.</p>
     </section>
 
-    <section id="contacto" class="cartao">
-      <h2>Contacto</h2>
-      <p>Escreve para <a href="mailto:ola@exemplo.com">ola@exemplo.com</a> ou encontra-me nas redes sociais.</p>
+    <section id="marcas" class="brands section-shell">
+      <div class="section-heading"><div><span class="eyebrow green">COMPATIBILIDADE</span><h2>Várias marcas.<br><em>Um só ponto de partida.</em></h2></div><p>Consulta os serviços disponíveis para as marcas que fazem parte do teu trabalho.</p></div>
+      <div class="brand-grid"><div class="brand-tile"><span class="brand-symbol">◉</span><b>Apple</b></div><div class="brand-tile"><span class="brand-symbol">S</span><b>Samsung</b></div><div class="brand-tile"><span class="brand-symbol">✦</span><b>Xiaomi</b></div><div class="brand-tile"><span class="brand-symbol">◈</span><b>Huawei</b></div><div class="brand-tile"><span class="brand-symbol">N</span><b>Nokia</b></div><div class="brand-tile"><span class="brand-symbol">＋</span><b>Outras marcas</b></div></div>
     </section>
+
+    <section id="servicos" class="services section-shell">
+      <div class="section-heading"><div><span class="eyebrow green">O QUE PROCURAS?</span><h2>Serviços em <em>destaque.</em></h2></div><a class="text-link" href="#contacto">Pedir informações <span>→</span></a></div>
+      <div class="service-grid"><article class="service-card"><div class="service-icon orange-icon">⌁</div><span class="card-label">CONECTIVIDADE</span><h3>Desbloqueio de rede</h3><p>Apresenta aqui os serviços de desbloqueio disponíveis e os modelos suportados.</p><a href="#contacto">Saber mais <span>→</span></a></article><article class="service-card"><div class="service-icon green-icon">⌘</div><span class="card-label">SOFTWARE</span><h3>Suporte de software</h3><p>Organiza ferramentas, créditos ou procedimentos por marca e tipo de dispositivo.</p><a href="#contacto">Saber mais <span>→</span></a></article><article class="service-card"><div class="service-icon blue-icon">◷</div><span class="card-label">APOIO TÉCNICO</span><h3>Ajuda especializada</h3><p>Explica como pedir apoio, quais os horários e que informação o cliente deve enviar.</p><a href="#contacto">Saber mais <span>→</span></a></article></div>
+    </section>
+
+    <section id="como-funciona" class="how section-shell"><div class="how-copy"><span class="eyebrow">SIMPLES E TRANSPARENTE</span><h2>O apoio certo,<br><em>em cada etapa.</em></h2><p>Mostra aos teus clientes o processo antes de receberes um pedido. Mais clareza ajuda a criar confiança.</p><a class="button button-dark" href="#contacto">Fala connosco <span>→</span></a></div><div class="steps"><div class="step"><span>01</span><div><h3>Escolhe a marca</h3><p>Indica o fabricante e o modelo do dispositivo.</p></div></div><div class="step"><span>02</span><div><h3>Consulta o serviço</h3><p>Confirma requisitos, disponibilidade e condições.</p></div></div><div class="step"><span>03</span><div><h3>Contacta o suporte</h3><p>Envia os detalhes para receber orientação.</p></div></div></div></section>
+
+    <section id="contacto" class="contact section-shell"><div><span class="eyebrow">PRECISAS DE AJUDA?</span><h2>Vamos conversar<br><em>sobre o teu próximo serviço.</em></h2></div><a class="button button-orange" href="deepmulla1@gmail.com?subject=Pedido%20de%20informação">Enviar email <span>↗</span></a></section>
   </main>
-
-  <footer>© <span id="ano"></span> O meu projeto</footer>
-  <script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+  <footer class="footer"><a class="brand footer-brand" href="#inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>GSM <b>SERVER</b></span></a><p>Serviços e suporte GSM para profissionais.</p><span>© <span id="year"></span> GSM Server. Todos os direitos reservados.</span></footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
