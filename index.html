@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Um website simples, rápido e gratuito para apresentar o teu projeto.">
+  <title>O meu website</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="#inicio">O meu projeto</a>
+    <nav aria-label="Navegação principal">
+      <a href="#sobre">Sobre</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <main id="inicio">
+    <section class="destaque">
+      <p class="etiqueta">Bem-vindo/a</p>
+      <h1>Uma ideia simples pode ganhar vida online.</h1>
+      <p>Este é o teu espaço na internet. Conta aqui, em poucas palavras, o que fazes e para quem.</p>
+      <a class="botao" href="#sobre">Conhecer o projeto</a>
+    </section>
+
+    <section id="sobre" class="cartao">
+      <h2>Sobre</h2>
+      <p>Substitui este texto por uma apresentação tua, do teu negócio ou do teu projeto. Podes acrescentar imagens e outras páginas quando quiseres.</p>
+    </section>
+
+    <section id="contacto" class="cartao">
+      <h2>Contacto</h2>
+      <p>Escreve para <a href="mailto:ola@exemplo.com">ola@exemplo.com</a> ou encontra-me nas redes sociais.</p>
+    </section>
+  </main>
+
+  <footer>© <span id="ano"></span> O meu projeto</footer>
+  <script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+</body>
+</html>
